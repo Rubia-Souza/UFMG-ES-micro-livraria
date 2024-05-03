@@ -21,6 +21,27 @@ app.get('/products', (req, res, next) => {
 });
 
 /**
+ * Retorna o produto com base no ID informado via InventoryService
+ */
+app.get('/product/:id', (request, response, next) => {
+    let handleMicroServicesResponse = (err, product) => {
+        if(err) {
+            console.error(err);
+            response.status(500).send({ error: 'something failed :(' });
+            return;
+        }
+
+        response.json(product);
+    };
+
+    let payload = {
+        id: request.params.id,
+    };
+
+    inventory.SearchProductByID(payload, handleMicroServicesResponse);
+});
+
+/**
  * Consulta o frete de envio no ShippingService
  */
 app.get('/shipping/:cep', (req, res, next) => {
